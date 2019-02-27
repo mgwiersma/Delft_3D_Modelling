@@ -1,4 +1,4 @@
-#include "eigen_solver.h"
+#include "../lib/eigen_solver.h"
 
 #include <iostream>
 
@@ -16,19 +16,19 @@ int main(int argc, char** argv) {
 	EigenSolver solver;
 	solver.solve(A);
 
-	std::cout << "The results: eiven value - eigen vector" << std::endl;
+	std::cout << "The results: eigen value - eigen vector" << std::endl;
 	for (int i = 0; i < 3; ++i) {
 		std::cout << solver.get_eigen_value(i) << " - (" << solver.get_eigen_vector(i) << ")" << std::endl;
 	}
 
-	std::cout << "\nNow let\'s check if the results are correct (A*v == d*v)..." << std::endl;
+    std::cout << "\nNow let\'s check if the results are correct (A*v - d*v should 5be 0-vector)..." << std::endl;
 	for (int i = 0; i < 3; ++i) {
 		float d = solver.get_eigen_value(i);
 		const vec3& v = solver.get_eigen_vector(i);
 		std::cout << i << ": " << A * v - d * v << std::endl;
 	}
-
-	system("pause");
-
+	
+	getchar();
 	return 0;
 }
+

@@ -1,6 +1,7 @@
 #include "eigen_solver.h"
 #include "eigen_symmetric.h"
 
+
 EigenSolver::EigenSolver()
 {
 
@@ -13,28 +14,49 @@ EigenSolver::~EigenSolver()
 }
 
 
-
 // compute the eigen values and eigen vectors of matrix m.
-// after computation:
-//  - the eigen values are stored in the member "m_eigen_values"
-//  - the eigen vectors are stored in the member "m_eigen_vectors"
-
 void EigenSolver::solve(const mat3& m) {
-	// TODO -> call the function defined in "eigen_symmetric.h"
-	// Please read carefully the manual of the function.
-	
-	int myvector[m.size()];
-	int pos = 0;
+    // after computation:
+    //  - the eigen values are stored in the member "m_eigen_values"
+    //  - the eigen vectors are stored in the member "m_eigen_vectors"
 
-	for (int i = 0; i < matrix.size(); i++) {
-		for (int j = 0; j < matrix.size(); j++) {
-			if (j > i) myvector[pos++] = matrix[i][j];
-			else myvector[pos++] = matrix[j][i];
+    // TODO -> call the function defined in "eigen_symmetric.h"
+    // Please read carefully the manual of the function.
+	float upper_tri_mat[6];
+	float eigen_vectors[9];
+
+	int count = 0;
+	for (int j = 0; j < 3; j++)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (i <= j)
+			{
+				upper_tri_mat[count] = m(i, j);
+				count++;
+			}
+
 		}
 	}
 
 
-	eigen::eigen_symmetric(myvector, 3, m_eigen_vectors, m_eigen_values);
-	//m_eigen_values = get_eigen_value(0);
-	//m_eigen_vectors = get_eigen_vector(0);
+	for (int i = 0; i < 6; ++i)
+		std::cout << upper_tri_mat[i] << "  " << std::endl;
+	
+	eigen::eigen_symmetric(upper_tri_mat,
+		3,
+		eigen_vectors,
+		m_eigen_values);
+ 
+	int count2 = 0;
+	for (int i = 2; i > 0; i--)
+	{
+		for (int j = 2; j > 0; j--)
+		{
+			m_eigen_vectors[i](j) = eigen_vectors[count2];
+			count2++;
+		}
+	}
+	for (int i = 0; i < 9; ++i)
+		std::cout << eigen_vectors[i] << "  " << std::endl;
 }
