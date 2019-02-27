@@ -1,6 +1,3 @@
-#pragma once
-#pragma once
-
 #ifndef GEO1004_VEC3_H
 #define GEO1004_VEC3_H	// TODO -- why is this here? Be prepared to explain to the TA.
 
@@ -25,7 +22,7 @@ public:
 	// destructor
 	~vec3();
 
-	// sqared length of the vector
+	// suqared length of the vector
 	float length2() const;
 
 	// length of the vector
@@ -62,185 +59,180 @@ protected:
 	float	m_data[3];	// data array
 };
 
-//DONE
-// TODO -- why is the following needed? Be prepared to explain to the TA
-// It is called overloading operators, it is needed because C++ cannot handle multiplication of vectors
-// only if we describe, what exactly needs to be done when calling "*", C++ can handle this case
 
-//DONE
+// TODO -- why is the following needed? Be prepared to explain to the TA
 inline vec3 operator*(float scalar, const vec3& v) {
 	// TODO -- multiply each component of v with scalar, in a new vector. return new vector
-	return vec3(v(0) * scalar, v(1) * scalar, v(2)*scalar);
+	return vec3(v(0)*scalar, v(1)*scalar, v(2)*scalar); 
 }
 
-//PREDONE
+
 inline std::ostream& operator<<(std::ostream& out, const vec3& v) {
-	for (int i = 0; i < 3; ++i)
-		out << v(i) << " ";
+    out << v(0) << " " << v(1) << " " << v(2);
 	return out;
 }
 
-//DONE NOT SURE IF RIGHT
+
 inline std::istream& operator>>(std::istream& in, vec3& v) {
 	// TODO: read a vector component-wise from the "in" stream
-	for (int i = 0; i < 3; ++i)
-		in >> v(i);
+	char dummy; //have to make sure that 'dummy' is what I actually type in
+	in >> v(0) >> dummy >> v(1) >> dummy >> v(2);
 	return in;
 }
 
-//DONE
+
 inline vec3::vec3() {
 	// TODO -- initialize m_data with 0s
-	m_data[0] = 0;
-	m_data[1] = 0;
-	m_data[2] = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		m_data[i] = float(0);
+	}
 }
 
-//DONE
+
 inline vec3::vec3(float x, float y, float z) {
-	// TODO -- initialize m_data with x,y,z What does the "= float(0)" in the class definition do? Be prepared to explain to the TA.
+    // TODO -- initialize m_data with x,y,z.
 	m_data[0] = x;
 	m_data[1] = y;
 	m_data[2] = z;
 }
 
-//DONE
+
 inline vec3::vec3(const vec3& other) {
 	// TODO -- copy contents of other to this vector
-	m_data[0] = other(0);
-	m_data[1] = other(1);
-	m_data[2] = other(2);
+	for (int i = 0; i < 3; i++)
+	{
+		m_data[i] = other(i);
+	}
+	//vec3(other(0), other(1), other(2)); //do I have to use m_data, or can I use an empty vector?
 }
 
-//DONE
+
 inline vec3::~vec3() {
 	// TODO -- is there anything to do here? Be prepared to explain to the TA.
-	//Nope, nothing to do here, the deconstructor take no arguments and have no returns, so nothing to process
 }
 
-//DONE
+
 inline float vec3::length2() const {
 	// TODO -- compute squared length of the vector
-	return float(length()*length()); // replace this line
+    return float(m_data[0] * m_data[0] + m_data[1] * m_data[1] + m_data[2] * m_data[2]); // replace this line
 }
 
-//DONE
+
 inline float vec3::length() const {
 	// TODO -- compute the length of the vector
-	return float(sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1] + m_data[2] * m_data[2]));
+    return float(sqrt(length2())); // replace this line
 }
 
-//DONE
+
 inline void vec3::normalize() {
 	// TODO -- if length()==0, do nothing, otherwise normalize the vector
-	if (length()!=0)
-	{
-		m_data[0] = m_data[0] / length();
-		m_data[1] = m_data[1] / length();
-		m_data[2] = m_data[2] / length();
+	float magnitude = length();
+	if (magnitude != 0) {
+		for (int i = 0; i < 3; i++)
+		{
+			m_data[i] = m_data[i] / magnitude;
+		}
 	}
 }
 
-//DONE
+
 inline float vec3::dot(const vec3& other) const {
 	// TODO -- compute dot product between this vector and other
-	return float(m_data[0] * other(0) + m_data[1] * other(1) + m_data[2] * other(2)); // replace this line.
+    return (m_data[0]*other(0)+ m_data[1] * other(1)+m_data[2] * other(2)); 
 }
 
-//DONE
+
 inline vec3 vec3::cross(const vec3& other) const {
 	// TODO -- compute the crossproduct between the first three components of this and other
-	return vec3(m_data[1] * other(2) - m_data[2] * other(1), m_data[2] * other(0) - m_data[0] * other(2), m_data[0] * other(1) - m_data[1] * other(0)); // replace this line
+	return vec3(m_data[1]*other(2) - m_data[2]*other(1),
+				m_data[2]*other(0) - m_data[0]*other(2),
+				m_data[0]*other(1) - m_data[1]*other(0));
 }
 
-//DONE - but answer for question must be improved
+
 inline const vec3& vec3::operator+=(const vec3& other) {
 	// TODO -- add other to this vector component-wise, store in this vector
-	
-	m_data[0] = m_data[0] + other(0);
-	m_data[1] = m_data[1] + other(1);
-	m_data[2] = m_data[2] + other(2);
-
+	m_data[0] += other(0);
+	m_data[1] += other(1);
+	m_data[2] += other(2);
 	return *this; // TODO -- why would you return a reference to *this? Be prepared to explain to the TA.
-	//It returns a temporary copy of the object
-
 }
 
-//DONE
+
 inline const vec3& vec3::operator-=(const vec3& other) {
 	// TODO -- subtract other from this vector component-wise, store in this vector
-
-	m_data[0] = m_data[0] - other(0);
-	m_data[1] = m_data[1] - other(1);
-	m_data[2] = m_data[2] - other(2);
-
+	m_data[0] -= other(0);
+	m_data[1] -= other(1);
+	m_data[2] -= other(2);
 	return *this;
 }
 
-//DONE - but answer for question must be improved
+
 inline vec3 vec3::operator-() const {
 	// TODO -- why can't we return a reference, here? Be prepared to explain to the TA.
-	//Because we're not using the equal sign here
-
 	// TODO -- return a new vector in which each component is the negated component from this vector
+
 	return vec3(-m_data[0], -m_data[1], -m_data[2]); // replace this line
 }
 
-//DONE
+
 inline vec3 vec3::operator+(const vec3& other) const {
 	// TODO -- return a new vector in which each component is the sum of the components of this vector and other
 
-	return vec3(m_data[0] + other(0), m_data[1] + other(1), m_data[2] + other(2)); // replace this line
+	return vec3(m_data[0]+other(0),
+				m_data[1]+other(1),
+				m_data[2]+other(2)); // replace this line
 }
 
-//DONE
+
 inline vec3 vec3::operator-(const vec3& other) const {
-	// TODO -- return a new vector in which each component is the difference between the components of this vector and other		
-	return vec3(abs(m_data[0] - other(0)), abs(m_data[1] - other(1)), abs(m_data[2] - other(2))); // replace this line
+	// TODO -- return a new vector in which each component is the difference between the components of this vector and other
+
+	return vec3(m_data[0] - other(0),
+				m_data[1] - other(1),
+				m_data[2] - other(2)); // should it be relative or absolute difference?
 }
 
-//DONE
+
+
 inline const vec3& vec3::operator*=(float scalar) {
 	// TODO -- replace each component of this with the matching component of this multiplied with the scalar
-	//         Make sure to convert the scalar from S to float
 	m_data[0] = m_data[0] * scalar;
 	m_data[1] = m_data[1] * scalar;
 	m_data[2] = m_data[2] * scalar;
 	return *this;
 }
 
-//DONE
-inline const vec3& vec3::operator/=(float scalar) {
-	// TODO -- why do we convert scalar and 0 to type float and not compare it as type S? Be prepared to explain to the TA.
-	//Because the values in m_data are also float
-	assert("vec3::operator/= -- invalid argument" && float(scalar) != float(0));
-	// TODO -- replace each component of this with the matching component of this multiplied with the scalar
-	//         Make sure to convert the scalar from S to float
 
+inline const vec3& vec3::operator/=(float scalar) {
+    assert(scalar != 0);
+    // TODO -- replace each component of this with the matching component of this divided by the scalar
 	m_data[0] = m_data[0] / scalar;
 	m_data[1] = m_data[1] / scalar;
 	m_data[2] = m_data[2] / scalar;
-
 	return *this;
 }
 
-//DONE
+
+
 inline vec3 vec3::operator*(float scalar) {
 	// TODO -- return a new vector in which each component equals the matching component of this vector times the scalar
-	//		   Make sure to convert the scalar from S to float
-	
-	return vec3(m_data[0] * scalar, m_data[1] * scalar, m_data[2] * scalar); // replace this line
+
+	//vec3::vec3(float x, float y, float z);
+	return vec3(m_data[0]*scalar, m_data[1]*scalar, m_data[2]*scalar); // replace this line
 }
 
-//DONE
+
+
 inline vec3 vec3::operator/(float scalar) {
-	assert("vec3::operator/ -- invalid argument" && float(scalar) != float(0));
+    assert(scalar != 0);
 	// TODO -- return a new vector in which each component equals the matching component of this vector divided by the scalar
 
-	return vec3(m_data[0] / scalar, m_data[1] / scalar, m_data[2] / scalar); // replace this line
+	return vec3(m_data[0]/scalar, m_data[1]/scalar, m_data[2]/scalar); // replace this line
 }
 
-//DONE
+
 inline const vec3 vec3::operator=(const vec3& other) {
 	// TODO -- overwrite each component in this vector with the matching component of other.
 	m_data[0] = other(0);
@@ -249,16 +241,17 @@ inline const vec3 vec3::operator=(const vec3& other) {
 	return *this;
 }
 
-//PREDONE
+
 inline float& vec3::operator()(int n) {
-	assert("vec3::operator() -- invalid argument" && n < 4);
+    assert(n < 3);
 	return m_data[n];
 }
 
-//PREDONE
+
 inline float vec3::operator()(int n) const {
-	assert("vec3::operator() const -- invalid argument" && n < 4);
+    assert(n < 3);
 	return m_data[n];
 }
+
 
 #endif

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef GEO1004_EIGEN_SOLVER_H
 #define GEO1004_EIGEN_SOLVER_H
 
@@ -12,10 +11,6 @@ public:
 	~EigenSolver();
 
 	// compute the eigen values and eigen vectors of matrix m.
-	// after computation:
-	//  - the eigen values are stored in the member "m_eigen_values"
-	//  - the eigen vectors are stored in the member "m_eigen_vectors"
-	// TODO -> to be implemented in the cpp file
 	void solve(const mat3& m);
 
 	// after computation, allow the user to retrieve the index_th eigen value
